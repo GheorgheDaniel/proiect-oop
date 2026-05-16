@@ -1,48 +1,57 @@
 #include <iostream>
-#include <array>
+#include <string>
+#include "archivemanager.h"
+#include "exceptions.h" 
 
 int main() {
-    std::cout << "Hello, world!\n";
-    std::array<int, 100> v{};
-    int nr;
-    std::cout << "Introduceți nr: ";
-    /////////////////////////////////////////////////////////////////////////
-    /// Observație: dacă aveți nevoie să citiți date de intrare de la tastatură,
-    /// dați exemple de date de intrare folosind fișierul tastatura.txt
-    /// Trebuie să aveți în fișierul tastatura.txt suficiente date de intrare
-    /// (în formatul impus de voi) astfel încât execuția programului să se încheie.
-    /// De asemenea, trebuie să adăugați în acest fișier date de intrare
-    /// pentru cât mai multe ramuri de execuție.
-    /// Dorim să facem acest lucru pentru a automatiza testarea codului, fără să
-    /// mai pierdem timp de fiecare dată să introducem de la zero aceleași date de intrare.
-    ///
-    /// Pe GitHub Actions (bife), fișierul tastatura.txt este folosit
-    /// pentru a simula date introduse de la tastatură.
-    /// Bifele verifică dacă programul are erori de compilare, erori de memorie și memory leaks.
-    ///
-    /// Dacă nu puneți în tastatura.txt suficiente date de intrare, îmi rezerv dreptul să vă
-    /// testez codul cu ce date de intrare am chef și să nu pun notă dacă găsesc vreun bug.
-    /// Impun această cerință ca să învățați să faceți un demo și să arătați părțile din
-    /// program care merg (și să le evitați pe cele care nu merg).
-    ///
-    /////////////////////////////////////////////////////////////////////////
-    std::cin >> nr;
-    /////////////////////////////////////////////////////////////////////////
-    for(int i = 0; i < nr; ++i) {
-        std::cout << "v[" << i << "] = ";
-        std::cin >> v[i];
+    int optiune;
+    std::string fisier;
+
+    while (true) {
+        std::cout << "        MENIU COMPRESIE DATE          \n";
+        std::cout << " 1. Arhiveaza folosind Huffman\n";
+        std::cout << " 2. Arhiveaza folosind LZW\n";
+        std::cout << " 3. Arhiveaza folosind cea mai buna\n";
+        std::cout << " 4. Dezarhiveaza un fisier (.bin)\n";
+        std::cout << " 5. Afiseaza statistici si IESI\n";
+        std::cout << " Alege o optiune (1-5): ";
+
+        if (optiune == 5) {
+            std::cout << ArchiveManager::getbytese() << '\n';
+            std::cout << "Iesire din program. O zi buna!\n";
+            break;
+        }
+
+        try {
+            if (optiune >= 1 && optiune <= 3) {
+                std::cout << " Numele fisierului pentru arhivare (ex: test.txt): ";
+                std::cin >> fisier;
+                
+                ArchiveManager manager(optiune); 
+                manager.compress(fisier);
+                
+                std::cout << "\nCompresie finalizata!\n";
+            } 
+            else if (optiune == 4) {
+                std::cout << " Numele fisierului binar (ex: arhiva.bin): ";
+                std::cin >> fisier;
+                
+                ArchiveManager manager(0); 
+                manager.decompress(fisier);
+                
+                std::cout << "\nDecompresie finalizata!\n";
+            } 
+            else {
+                std::cout << "Optiune invalida! Alege intre 1 si 5.\n";
+            }
+        } 
+        catch (const ArchiveException& e) {
+            std::cerr << "\nEROARE DE ARHIVARE: " << e.what() << "\n";
+        } 
+        catch (const std::exception& e) {
+            std::cerr << "EROARE SISTEM: " << e.what() << "\n";
+        }
     }
-    std::cout << "\n\n";
-    std::cout << "Am citit de la tastatură " << nr << " elemente:\n";
-    for(int i = 0; i < nr; ++i) {
-        std::cout << "- " << v[i] << "\n";
-    }
-    ///////////////////////////////////////////////////////////////////////////
-    /// Pentru date citite din fișier, NU folosiți tastatura.txt. Creați-vă voi
-    /// alt fișier propriu cu ce alt nume doriți.
-    /// Exemplu:
-    /// std::ifstream fis("date.txt");
-    /// for(int i = 0; i < nr2; ++i)
-    ///     fis >> v2[i];
+
     return 0;
 }
