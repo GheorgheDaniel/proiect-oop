@@ -1,31 +1,18 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <cstdint>
 #include "ICompressor.h"
+#include "huffmantree.h"
+#include "node.h"
 
 class Huffman: public ICompressor{
-    private: 
-    struct Node{
-        Node *left, *right;
-        int val;
-        Node() {
-            left = nullptr; right = nullptr;
-        }
-    };
-    
-    struct pii{
-        int fr;
-        uint8_t label;
-        Node *nd;
-        bool operator <(const pii& v) const{
-            return this->fr > v.fr;
-        }
-    };
-    Node *buildTree(std::vector<int>&fr);
-    void dfs(Node *nd, std::vector<std::vector<bool>>&nw, std::vector<bool>&bits);
 
+    private: 
+    HuffmanTree HT;
     public: 
     ~Huffman() override;
+    void clearTree();
     void compress(const std::string& in, const std::string& out) override;
-    void decompress(const std::string& in, const std::string& out) override;
+    void decompress(const std::string& in, const std::string& out, size_t alreadyread) override;
 };
