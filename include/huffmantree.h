@@ -14,7 +14,7 @@ class HuffmanTree{
     Node* getRoot() const { return root; }
     HuffmanTree(): root(nullptr) {};
     ~HuffmanTree();
-    void buildTree(std::vector<int>&fr);
+    void buildTree(const std::vector<int>&fr);
     void generateCodes(std::vector<std::vector<bool>>& nw);
     void clear();
     private:

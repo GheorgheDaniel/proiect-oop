@@ -12,7 +12,7 @@ class archive_header{
     public:
     archive_header() : algo_type(0), sz_ext(0) {}
     uint8_t get_algo_type() const {return algo_type;}
-    std::string get_extension() const {return extension; }
+    const std::string get_extension() const {return extension; }
     void set_data(const std::string& ext, uint8_t at);
     friend std::istream &operator>>(std::istream &in, archive_header &c);
     friend std::ostream &operator<<(std::ostream &out, const archive_header &c);

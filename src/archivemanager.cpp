@@ -8,6 +8,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <algorithm>
 
 size_t ArchiveManager::byteseconomisiti = 0;
 
