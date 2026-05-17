@@ -1,5 +1,5 @@
-3
-4
-3
-4
+3 test.txt
+4 test.bin
+3 test.txt
+4 test.bin
 5
