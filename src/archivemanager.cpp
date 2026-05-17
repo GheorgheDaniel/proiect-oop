@@ -1,9 +1,13 @@
+#pragma once
 #include "archivemanager.h"
 #include "huffman.h"
 #include "lzw.h"
 #include "compressordecider.h"
 #include "info.h"
 #include <filesystem>
+#include <iostream>
+#include <string>
+#include <fstream>
 
 size_t ArchiveManager::byteseconomisiti = 0;
 
@@ -22,7 +26,7 @@ void ArchiveManager::compress(const std::string& input) {
     std::string v; 
     if(input1.find(".") < input1.size())
     while(input1.back() != '.') {v.push_back(input1.back()); input1.pop_back();}
-    reverse(v.begin(), v.end());
+    std::reverse(v.begin(), v.end());
     if(mode == 1 || mode == 2) {
         AH.set_data(v, mode);
         std::ofstream fout(input1 + "bin", std::ios::binary);

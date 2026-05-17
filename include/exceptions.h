@@ -1,6 +1,7 @@
 #pragma once
 #include <exception>
 #include <string>
+#include <stdexcept>
 
 class ArchiveException : public std::exception {
     protected:
