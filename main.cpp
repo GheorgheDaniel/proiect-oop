@@ -16,6 +16,9 @@ int main() {
         std::cout << " 5. Afiseaza statistici si IESI\n";
         std::cout << " Alege o optiune (1-5): ";
         std::cin >> optiune;
+        if(std::cin.eof()) {
+            break;
+        }
         if (optiune == 5) {
             std::cout << ArchiveManager::getbytese() << '\n';
             std::cout << "Iesire din program. O zi buna!\n";
