@@ -2,12 +2,9 @@
 
 struct Node{
     Node *left, *right;
-    int val = 0;
-    int fr = 0;
-    Node() {
-        fr = 0;
-        left = nullptr; right = nullptr;
-    }
+    int val;
+    int fr;
+    Node() : left(nullptr), right(nullptr), val(0), fr(0) {}
     bool operator <(const Node& v) const{
         return this->fr > v.fr;
     }
