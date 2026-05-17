@@ -53,10 +53,12 @@ void HuffmanTree::buildTree(const std::vector<int>&fr) {
                 pq.push(nd);
             }
         }
+        Node *node1;
+        Node *node2;
         while(pq.size() > 1) {
-            Node *node1 = pq.top();
+            node1 = pq.top();
             pq.pop();
-            Node *node2 = pq.top();
+            node2 = pq.top();
             pq.pop();
             Node *node3 = new Node(*node1 + *node2);
             pq.push(node3);

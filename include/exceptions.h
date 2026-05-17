@@ -16,7 +16,7 @@ class ArchiveException : public std::exception {
 
 class FileMissingE : public ArchiveException{
     public: 
-    FileMissingE(const std::string& file) : ArchiveException("Fisier lipsa: " + file) {}
+    explicit FileMissingE(const std::string& file) : ArchiveException("Fisier lipsa: " + file) {}
 };
 
 class CorruptArchiveE : public ArchiveException{
