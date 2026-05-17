@@ -43,11 +43,11 @@ HuffmanTree& HuffmanTree::operator=(const HuffmanTree& other) {
 void HuffmanTree::buildTree(const std::vector<int>&fr) {
         std::priority_queue<Node *, std::vector<Node *>, 
             std::function<bool(Node*, Node*)>>pq(
-        [](Node* n1, Node* n2) { return n1->fr > n2->fr; });
+        [](const Node* n1, const Node* n2) { return n1->fr > n2->fr; });
         for(int i = 0; i < 256; i++) {
             if(fr[i])
             {
-                Node *nd = new Node;
+                Node *nd = new Node();
                 nd->val = i;
                 nd->fr = fr[i];
                 pq.push(nd);

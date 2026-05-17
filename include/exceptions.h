@@ -7,10 +7,7 @@ class ArchiveException : public std::exception {
     protected:
     std::string message;
     public:
-    ArchiveException() : message("") {}
-    ArchiveException(const std::string& msj) {
-        message = msj;
-    }
+    explicit ArchiveException(const std::string& msj) : message(msj) {}
 
     const char* what() const noexcept override{
         return message.c_str();
