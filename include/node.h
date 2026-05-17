@@ -2,8 +2,8 @@
 
 struct Node{
     Node *left, *right;
-    int val;
-    int fr;
+    int val = 0;
+    int fr = 0;
     Node() {
         fr = 0;
         left = nullptr; right = nullptr;

@@ -1,4 +1,11 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <string>
+#include <queue>
+#include <unordered_map>
+#include <algorithm>
+#include <functional>
 #include "huffman.h"
 #include "exceptions.h"
 Huffman::~Huffman() {
@@ -34,7 +41,7 @@ void Huffman::compress(const std::string& input, const std::string& output) {
 
         std::ofstream fout(output, std::ios::binary | std::ios::app);
         if(!fout.is_open()) {
-            throw std::runtime_error("Lipseste fisier iesire");
+            throw FileMissingE("Lipseste fisier iesire");
         }   
 
         /*
@@ -93,6 +100,7 @@ void Huffman::decompress(const std::string& input, const std::string& output, si
 
     HT.buildTree(fr);
     Node *nd = HT.getRoot();
+    if (nd == nullptr) return;
     Node *ndaux = nd;
 
     size_t poz = 0;

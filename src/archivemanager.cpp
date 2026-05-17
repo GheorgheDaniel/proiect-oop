@@ -4,7 +4,6 @@
 #include "compressordecider.h"
 #include "info.h"
 #include <filesystem>
-#include <bits/stdc++.h>
 
 size_t ArchiveManager::byteseconomisiti = 0;
 
@@ -83,8 +82,8 @@ void ArchiveManager::decompress(const std::string& input) {
 
     Info<int>::actions("SE RULEAZA ALGORITMUL: ", AH.get_algo_type());
     ICompressor* compresor = CompressorDecider::createCompressor(AH.get_algo_type());
-    compresor->decompress(input, input1 + AH.get_extension(), alreadyread);
-    Huffman* huff1 = dynamic_cast<Huffman*>(compresor);
+    compresor->decompress(input, "recovered" + input1 + AH.get_extension(), alreadyread);
+    Huffman* huff1 = dynamic_cast<Huffman*>(compresor); 
 
     if(huff1 != nullptr) {
         huff1->clearTree();

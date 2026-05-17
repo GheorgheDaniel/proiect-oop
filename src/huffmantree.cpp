@@ -1,4 +1,11 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <string>
+#include <queue>
+#include <unordered_map>
+#include <algorithm>
+#include <functional>
 #include "node.h"
 #include "huffmantree.h"
 

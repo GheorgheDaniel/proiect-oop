@@ -1,6 +1,7 @@
 #pragma once
-#include <bits/stdc++.h>
-
+#include <iostream>
+#include <cstring>
+#include <cstdint>
 class archive_header{
     private:
     uint8_t algo_type;
@@ -8,6 +9,8 @@ class archive_header{
     std::string extension;  
 
     public:
+    public:
+    archive_header() : algo_type(0), sz_ext(0) {}
     uint8_t get_algo_type() const {return algo_type;}
     std::string get_extension() const {return extension; }
     void set_data(const std::string& ext, uint8_t at);
