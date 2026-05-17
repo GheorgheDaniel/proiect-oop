@@ -9,11 +9,9 @@ struct Node{
         return this->fr > v.fr;
     }
 
-    Node operator +(Node& v) {
+    Node operator +(const Node& v) const {
         Node ans;
         ans.fr = v.fr + this->fr;
-        ans.left = this;  
-        ans.right = &v;
         return ans;
     }
 };  

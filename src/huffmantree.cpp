@@ -42,7 +42,7 @@ HuffmanTree& HuffmanTree::operator=(const HuffmanTree& other) {
 
 void HuffmanTree::buildTree(const std::vector<int>&fr) {
         std::priority_queue<Node *, std::vector<Node *>, 
-            std::function<bool(Node*, Node*)>>pq(
+            std::function<bool(const Node*, const Node*)>> pq(
         [](const Node* n1, const Node* n2) { return n1->fr > n2->fr; });
         for(int i = 0; i < 256; i++) {
             if(fr[i])
@@ -61,6 +61,8 @@ void HuffmanTree::buildTree(const std::vector<int>&fr) {
             node2 = pq.top();
             pq.pop();
             Node *node3 = new Node(*node1 + *node2);
+            node3->left = node1;
+            node3->right = node2;
             pq.push(node3);
 
         }
