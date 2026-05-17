@@ -1,4 +1,3 @@
-#pragma once
 #include "archivemanager.h"
 #include "huffman.h"
 #include "lzw.h"
