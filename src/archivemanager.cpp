@@ -1,3 +1,4 @@
+#pragma once
 #include "archivemanager.h"
 #include "huffman.h"
 #include "lzw.h"
@@ -9,11 +10,13 @@
 #include <fstream>
 #include <algorithm>
 
+#include "binaryreader.h"
+#include "binarywriter.h"
+
 size_t ArchiveManager::byteseconomisiti = 0;
 
 void ArchiveManager::compress(const std::string& input) {
     Info<std::string>::actions("COMPRESIA A INCEPUT", input);
-    std::ifstream fin(input, std::ios::binary);
     std::string input1 = input;
     /*
         de creat fisierul de iesire
@@ -29,7 +32,7 @@ void ArchiveManager::compress(const std::string& input) {
     std::reverse(v.begin(), v.end());
     if(mode == 1 || mode == 2) {
         AH.set_data(v, mode);
-        std::ofstream fout(input1 + "bin", std::ios::binary);
+        BinaryWriter fout(input1 + "bin");
         fout << AH;
         fout.close();
         // Huffman HF;
@@ -41,7 +44,7 @@ void ArchiveManager::compress(const std::string& input) {
     }
     if(mode == 3) {
         AH.set_data(v, 1);
-        std::ofstream foutH("huffman" + input1 + "bin", std::ios::binary);
+        BinaryWriter foutH("huffman" + input1 + "bin");
         foutH << AH;
         foutH.close();
         Info<int>::actions("SE RULEAZA ALGORITMUL: ", AH.get_algo_type());
@@ -50,7 +53,7 @@ void ArchiveManager::compress(const std::string& input) {
         delete compH;
 
         AH.set_data(v, 2);
-        std::ofstream foutL("LZW" + input1 + "bin", std::ios::binary);
+        BinaryWriter foutL("LZW" + input1 + "bin");
         foutL << AH;
         foutL.close();
         Info<int>::actions("SE RULEAZA ALGORITMUL: ", AH.get_algo_type());
@@ -75,14 +78,13 @@ void ArchiveManager::compress(const std::string& input) {
 
 void ArchiveManager::decompress(const std::string& input) {
     Info<std::string>::actions("DECOMPRESIA A INCEPUT", input);
-    std::ifstream fin(input, std::ios::binary);
+    BinaryReader fin(input);
     std::string input1 = input;
     if(input1.find(".") < input1.size())
     while(input1.back() != '.') {input1.pop_back();}
 
     fin >> AH;
     size_t alreadyread = fin.tellg();
-    fin.close();
 
     Info<int>::actions("SE RULEAZA ALGORITMUL: ", AH.get_algo_type());
     ICompressor* compresor = CompressorDecider::createCompressor(AH.get_algo_type());

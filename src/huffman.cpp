@@ -8,6 +8,8 @@
 #include <functional>
 #include "huffman.h"
 #include "exceptions.h"
+#include "binaryreader.h"
+#include "binarywriter.h"
 Huffman::~Huffman() {
 
 }
@@ -22,27 +24,18 @@ Huffman::~Huffman() {
     
     */
 void Huffman::compress(const std::string& input, const std::string& output) {
-        std::ifstream fin(input, std::ios::binary);
+        BinaryReader fin(input);
+        BinaryWriter fout(output, 1);
+
         
-        if (!fin.is_open()) {
-            throw std::runtime_error("Lipseste fisierul de intrare");
-        }
-        std::vector<uint8_t> data(
-            (std::istreambuf_iterator<char>(fin)), 
-            std::istreambuf_iterator<char>()
-        );
-        fin.close();
+        std::vector<char> data = fin.readall();
 
         std::vector<int>fr(256);
-        for(auto i : data) fr[i]++;
+        for(auto i : data) fr[(uint8_t)i]++;
         HT.buildTree(fr);
         std::vector<std::vector<bool>> compressed(256); 
         HT.generateCodes(compressed);
 
-        std::ofstream fout(output, std::ios::binary | std::ios::app);
-        if(!fout.is_open()) {
-            throw FileMissingE("Lipseste fisier iesire");
-        }   
 
         /*
         
@@ -55,17 +48,19 @@ void Huffman::compress(const std::string& input, const std::string& output) {
 
         //de revazut bucata asta daca e ok
         size_t original_size = data.size();
-        fout.write(reinterpret_cast<const char*>(&original_size), sizeof(size_t));
-        fout.write(reinterpret_cast<const char*>(fr.data()), 256 * sizeof(int));
+        fout << original_size;
+        for(auto fq : fr) {
+            fout << fq;
+        }
 
         uint8_t buffer = 0, bit = 0;
 
         for(auto i : data) {
-            for(auto bt : compressed[i]) {
+            for(auto bt : compressed[(uint8_t)i]) {
                 buffer |= (bt << (7 - bit));
                 bit++;
                 if(bit == 8) {
-                    fout.put((char)buffer);
+                    fout << buffer;
                     bit = 0; buffer = 0;
                 }
 
@@ -73,30 +68,23 @@ void Huffman::compress(const std::string& input, const std::string& output) {
             }
         }   
         if(bit != 0) {
-            fout.put((char)buffer);
+            fout << buffer;
         }
-        fout.close();
 
 }
 
 void Huffman::decompress(const std::string& input, const std::string& output, size_t offset) {
-    std::ifstream fin(input, std::ios::binary);
-        
-    if (!fin.is_open()) {
-        throw std::runtime_error("Lipseste fisierul de intrare");
-    }
-    fin.seekg(offset);
+    BinaryReader fin(input, offset);
+
     size_t len;
-    fin.read(reinterpret_cast<char*>(&len), sizeof(size_t));
+    fin >> len;
 
     std::vector<int>fr(256);
-    fin.read(reinterpret_cast<char*>(fr.data()), 256 * sizeof(int));
+    for (int i = 0; i < 256; ++i) {
+        fin >> fr[i];
+    }
 
-    std::vector<uint8_t> arhiva(
-        (std::istreambuf_iterator<char>(fin)), 
-        std::istreambuf_iterator<char>()
-    );
-    fin.close();
+    std::vector<char> arhiva = fin.readall();
 
     HT.buildTree(fr);
     Node *nd = HT.getRoot();
@@ -104,30 +92,26 @@ void Huffman::decompress(const std::string& input, const std::string& output, si
     Node *ndaux = nd;
 
     size_t poz = 0;
-    std::ofstream fout(output, std::ios::binary);
-    if(!fout.is_open()) {
-        throw std::runtime_error("Lipseste fisier iesire");
-    }   
+    BinaryWriter fout(output);
+
 
     for (auto i : arhiva)
     {   
         for(uint8_t idx = 0; idx < 8; idx++) {
-            uint8_t bit = ((i >> (7 - idx)) & 1);
+            uint8_t bit = ((((uint8_t)i) >> (7 - idx)) & 1);
             if(bit == 1) {ndaux = ndaux->right;}
             else {ndaux = ndaux->left;}    
             
             if (ndaux->left == nullptr) {
-                fout.put((char)ndaux->val);                
+                fout << (char)ndaux->val;                
                 ndaux = nd;
                 poz++;
                 if(poz == len) {
-                    fout.close();
                     return ;
                 }
             }
         }
     }
-    fout.close();
 }
 
 void Huffman::clearTree() {

@@ -2,6 +2,9 @@
 #include <iostream>
 #include <cstring>
 #include <cstdint>
+#include "binaryreader.h"
+#include "binarywriter.h"
+
 class archive_header{
     private:
     uint8_t algo_type;
@@ -14,8 +17,8 @@ class archive_header{
     uint8_t get_algo_type() const {return algo_type;}
     const std::string& get_extension() const {return extension; }
     void set_data(const std::string& ext, uint8_t at);
-    friend std::istream &operator>>(std::istream &in, archive_header &c);
-    friend std::ostream &operator<<(std::ostream &out, const archive_header &c);
+    friend BinaryReader& operator>>(BinaryReader &in, archive_header &c);
+    friend BinaryWriter& operator<<(BinaryWriter &out, const archive_header &c);
 };
 
 /*
@@ -33,19 +36,23 @@ inline void archive_header::set_data(const std::string& ext, uint8_t at) {
     extension = ext;
 }
 
-inline std::istream &operator>>(std::istream &in, archive_header &c)
+inline BinaryReader &operator>>(BinaryReader &in, archive_header &c)
 {
-    c.algo_type = in.get();
-    c.sz_ext = in.get();
+    in >> c.algo_type;
+    in >> c.sz_ext;
     c.extension.resize(c.sz_ext);
-    in.read(&c.extension[0], c.sz_ext);
+    for (int i = 0; i < c.sz_ext; ++i) {
+        in >> c.extension[i]; 
+    }
     return in;
 }
 
-inline std::ostream &operator<<(std::ostream &out, const archive_header &c)
+inline BinaryWriter &operator<<(BinaryWriter &out, const archive_header &c)
 {
-    out.put(c.algo_type);
-    out.put(c.sz_ext);
-    out.write(c.extension.c_str(), c.sz_ext);
+    out << c.algo_type;
+    out << c.sz_ext;
+    for (char ch : c.extension) {
+        out << ch;
+    }
     return out;
 }

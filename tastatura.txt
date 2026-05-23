@@ -2,4 +2,6 @@
 4 test.bin
 3 test.txt
 4 test.bin
+1 test.txt
+2 test.txt
 5
