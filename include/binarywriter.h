@@ -9,7 +9,7 @@ class BinaryWriter{
     private:
         std::ofstream fout;
     public: 
-        BinaryWriter(const std::string &output_file, bool append = false) {
+        explicit BinaryWriter(const std::string &output_file, bool append = false) {
             if (append) {
                 fout.open(output_file, std::ios::binary | std::ios::app);
             } else {

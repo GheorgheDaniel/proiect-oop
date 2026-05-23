@@ -8,7 +8,7 @@ class BinaryReader{
     private:
         std::ifstream fin;
     public: 
-        BinaryReader(const std::string &input_file, size_t offset = 0) {
+        explicit BinaryReader(const std::string &input_file, size_t offset = 0) {
             fin.open(input_file, std::ios::binary);
             fin.seekg(offset);
         }
