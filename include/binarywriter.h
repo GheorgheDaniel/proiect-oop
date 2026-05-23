@@ -27,9 +27,6 @@ class BinaryWriter{
             fout.write(biti.data(), biti.size());
             return *this; 
         }
-        void writeall(const std::vector<char>& data) {
-            fout.write(data.data(), data.size());
-        }
         void close() {
             if (fout.is_open()) {
                 fout.close();
