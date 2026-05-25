@@ -11,6 +11,8 @@
 #include "binaryreader.h"
 #include "binarywriter.h"
 
+const int MAX_DICT_SIZE = (1 << 16) - 1;
+
 LZW::~LZW() {
 
 }
@@ -88,7 +90,7 @@ void LZW::decompress(const std::string& input, const std::string& output, size_t
         for (char c : actualul) {
             fout << c;
         }
-        if(dict.size() < (1 << 16) - 1) {dict.push_back(antechr + actualul[0]); }
+        if(dict.size() < MAX_DICT_SIZE) {dict.push_back(antechr + actualul[0]); }
         antechr = actualul;
     }
 

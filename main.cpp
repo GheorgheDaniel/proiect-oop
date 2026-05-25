@@ -19,6 +19,7 @@ int main() {
         if(std::cin.eof()) {
             break;
         }
+
         if (optiune == 5) {
             std::cout << ArchiveManager::getbytese() << '\n';
             std::cout << "Iesire din program. O zi buna!\n";
@@ -45,7 +46,7 @@ int main() {
                 std::cout << "\nDecompresie finalizata!\n";
             } 
             else {
-                std::cout << "Optiune invalida! Alege intre 1 si 5.\n";
+                std::cout << "Optiune invalida!.\n";
             }
         } 
         catch (const ArchiveException& e) {
