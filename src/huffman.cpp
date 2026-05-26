@@ -28,7 +28,11 @@ void Huffman::compress(const std::string& input, const std::string& output) {
         BinaryWriter fout(output, 1);
 
         
-        std::vector<char> data = fin.readall();
+        std::vector<char> data;
+        char chr;
+        while(fin >> chr) {
+            data.push_back(chr);
+        }
 
         std::vector<int>fr(256);
         for(auto i : data) fr[(uint8_t)i]++;
@@ -84,7 +88,9 @@ void Huffman::decompress(const std::string& input, const std::string& output, si
         fin >> fr[i];
     }
 
-    std::vector<char> arhiva = fin.readall();
+    std::vector<char> arhiva;
+    char chr;
+    while(fin >> chr) {arhiva.push_back(chr);}
 
     HT.buildTree(fr);
     Node *nd = HT.getRoot();

@@ -12,7 +12,6 @@ class archive_header{
     std::string extension;  
 
     public:
-    public:
     archive_header() : algo_type(0), sz_ext(0) {}
     uint8_t get_algo_type() const {return algo_type;}
     const std::string& get_extension() const {return extension; }

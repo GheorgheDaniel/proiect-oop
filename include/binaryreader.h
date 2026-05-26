@@ -31,15 +31,5 @@ class BinaryReader{
 
         size_t tellg() { return fin.tellg();}
 
-        std::vector<char> readall() {
-            size_t current_pos = fin.tellg();
-            fin.seekg(0, std::ios::end);
-            size_t decitit = (size_t)fin.tellg() - current_pos;
-            fin.seekg(current_pos, std::ios::beg);
-            
-            std::vector<char> cti(decitit);
-            fin.read(cti.data(), decitit);
-            return cti ;
-        }
 
 };
