@@ -6,22 +6,20 @@
 int main() {
     int optiune;
     std::string fisier;
-
     while (true) {
-        std::cout << "        MENIU COMPRESIE DATE          \n";
+        std::cout << "MENIU COMPRESIE DATE\n";
         std::cout << " 1. Arhiveaza folosind Huffman\n";
         std::cout << " 2. Arhiveaza folosind LZW\n";
         std::cout << " 3. Arhiveaza folosind cea mai buna\n";
         std::cout << " 4. Dezarhiveaza un fisier (.bin)\n";
         std::cout << " 5. Afiseaza statistici si IESI\n";
-        // std::cout << " Alege o optiune (1-5): ";
         std::cin >> optiune;
         if(std::cin.eof()) {
             break;
         }
         if (optiune == 5) {
             std::cout << ArchiveManager::getbytese() << '\n';
-            std::cout << "Iesire din program. O zi buna!\n";
+            std::cout << "Iesire din program.\n";
             break;
         }
 
@@ -56,11 +54,39 @@ int main() {
             }
         } 
         catch (const ArchiveException& e) {
-            std::cerr << "\nEROARE DE ARHIVARE: " << e.what() << "\n";
+            if (dynamic_cast<const WrongPasswordE*>(&e) != nullptr) {
+                
+                int incercari = 2; 
+                bool reusit = false;
+                
+                while(incercari > 0 && !reusit) {
+                    std::cout << "\nParola incorecta. Mai poti incerca de " << incercari << " ori.\n";
+                    std::cout << "Introdu parola: ";
+                    std::string p_noua;
+                    std::getline(std::cin, p_noua);
+                    
+                    try {
+                        ArchiveManager manager(0); 
+                        manager.decompress(fisier, p_noua);
+                        reusit = true;
+                        std::cout << "\nDecompresie finalizata cu succes!\n";
+                    }
+                    catch (const ArchiveException& inner_e) {
+                        if (dynamic_cast<const WrongPasswordE*>(&inner_e) != nullptr) {
+                            incercari--;
+                        } else {
+                            std::cerr << "\nEroare: " << inner_e.what() << "\n";
+                            break; 
+                        }
+                    }
+                }
+                
+                if (!reusit) {
+                    std::cerr << "\nPrea multe incercari de parole.\n";
+                }
+            }
+            else std::cerr << "\nEROARE DE ARHIVARE: " << e.what() << "\n";
         } 
-        catch (const std::exception& e) {
-            std::cerr << "EROARE SISTEM: " << e.what() << "\n";
-        }
     }
 
     return 0;
