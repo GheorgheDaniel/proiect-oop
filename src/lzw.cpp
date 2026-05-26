@@ -27,7 +27,6 @@ void LZW::compress(const std::string& input, const std::string& output) {
     BinaryReader fin(input);
     BinaryWriter fout(output, 1);  
 
-    std::vector<char>data;
     std::unordered_map<std::string, uint16_t>dict;
     std::string pfx;
     uint16_t val = 256;

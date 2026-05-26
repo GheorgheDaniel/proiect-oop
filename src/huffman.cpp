@@ -100,7 +100,7 @@ void Huffman::decompress(const std::string& input, const std::string& output, si
     size_t poz = 0;
     BinaryWriter fout(output);
 
-
+    // std::vector<char>decomp;
     for (auto i : arhiva)
     {   
         for(uint8_t idx = 0; idx < 8; idx++) {
@@ -109,7 +109,8 @@ void Huffman::decompress(const std::string& input, const std::string& output, si
             else {ndaux = ndaux->left;}    
             
             if (ndaux->left == nullptr) {
-                fout << (char)ndaux->val;                
+                fout << (char)ndaux->val;     
+                // decomp.push_back((char)ndaux->val);           
                 ndaux = nd;
                 poz++;
                 if(poz == len) {
