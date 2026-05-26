@@ -13,7 +13,7 @@ class archive_header{
     int pass;
 
     public:
-    archive_header() : algo_type(0), sz_ext(0) pass(0) {}
+    archive_header() : algo_type(0), sz_ext(0), pass(0) {}
     uint8_t get_algo_type() const {return algo_type;}
     int get_password() const {return pass; }
     const std::string& get_extension() const {return extension; }
