@@ -8,6 +8,6 @@ class LZW: public ICompressor{
 
     public: 
     ~LZW() override;
-    void compress(const std::string& in, const std::string& out) override;
-    void decompress(const std::string& in, const std::string& out, size_t alreadyread) override;
+    void compress(const std::string& in, const std::string& out, const int password) override;
+    void decompress(const std::string& in, const std::string& out, size_t alreadyread, const int password) override;
 };

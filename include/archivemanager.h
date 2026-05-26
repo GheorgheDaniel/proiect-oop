@@ -9,6 +9,6 @@ class ArchiveManager{
     public:
     explicit ArchiveManager(int m = 1) : mode(m) {}
     static size_t getbytese() { return byteseconomisiti; }
-    void compress(const std::string& in);
-    void decompress(const std::string& in);
+    void compress(const std::string& in, const std::string& password);
+    void decompress(const std::string& in, const std::string& password);
 };

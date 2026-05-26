@@ -23,3 +23,8 @@ class CorruptArchiveE : public ArchiveException{
     public: 
     CorruptArchiveE() : ArchiveException("Fisierul binar este corupt") {}
 };
+
+class WrongPasswordE : public ArchiveException{
+    public: 
+    WrongPasswordE() : ArchiveException("Parola este gresita") {}
+};

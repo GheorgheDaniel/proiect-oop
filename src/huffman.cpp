@@ -10,6 +10,7 @@
 #include "exceptions.h"
 #include "binaryreader.h"
 #include "binarywriter.h"
+#include "encryptor.h"
 Huffman::~Huffman() {
 
 }
@@ -23,17 +24,17 @@ Huffman::~Huffman() {
             -> pun sirul compresat in fisierul de iesire
     
     */
-void Huffman::compress(const std::string& input, const std::string& output) {
+void Huffman::compress(const std::string& input, const std::string& output, const int password) {
         BinaryReader fin(input);
         BinaryWriter fout(output, 1);
-
-        
         std::vector<char> data;
+        Encrypt e(password);
+
         char chr;
         while(fin >> chr) {
             data.push_back(chr);
         }
-
+        
         std::vector<int>fr(256);
         for(auto i : data) fr[(uint8_t)i]++;
         HT.buildTree(fr);
@@ -52,9 +53,9 @@ void Huffman::compress(const std::string& input, const std::string& output) {
 
         //de revazut bucata asta daca e ok
         size_t original_size = data.size();
-        fout << original_size;
+        fout << e.encrypt(original_size);
         for(auto fq : fr) {
-            fout << fq;
+            fout << e.encrypt(fq);
         }
 
         uint8_t buffer = 0, bit = 0;
@@ -64,7 +65,7 @@ void Huffman::compress(const std::string& input, const std::string& output) {
                 buffer |= (bt << (7 - bit));
                 bit++;
                 if(bit == 8) {
-                    fout << buffer;
+                    fout << e.encrypt(buffer);
                     bit = 0; buffer = 0;
                 }
 
@@ -72,25 +73,27 @@ void Huffman::compress(const std::string& input, const std::string& output) {
             }
         }   
         if(bit != 0) {
-            fout << buffer;
+            fout << e.encrypt(buffer);
         }
 
 }
 
-void Huffman::decompress(const std::string& input, const std::string& output, size_t offset) {
+void Huffman::decompress(const std::string& input, const std::string& output, size_t offset, const int password) {
     BinaryReader fin(input, offset);
+    Encrypt e(password);
 
     size_t len;
     fin >> len;
-
+    len = e.encrypt(len);
     std::vector<int>fr(256);
     for (int i = 0; i < 256; ++i) {
         fin >> fr[i];
+        fr[i] = e.encrypt(fr[i]);
     }
 
     std::vector<char> arhiva;
     char chr;
-    while(fin >> chr) {arhiva.push_back(chr);}
+    while(fin >> chr) {arhiva.push_back(e.encrypt(chr));}
 
     HT.buildTree(fr);
     Node *nd = HT.getRoot();

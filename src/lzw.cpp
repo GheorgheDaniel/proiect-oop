@@ -10,6 +10,7 @@
 #include "exceptions.h"
 #include "binaryreader.h"
 #include "binarywriter.h"
+#include "encryptor.h"
 
 const int MAX_DICT_SIZE = (1 << 16) - 1;
 
@@ -23,7 +24,7 @@ LZW::~LZW() {
             -> todo
     
     */
-void LZW::compress(const std::string& input, const std::string& output) {
+void LZW::compress(const std::string& input, const std::string& output, const int password) {
     BinaryReader fin(input);
     BinaryWriter fout(output, 1);  
 
@@ -35,13 +36,15 @@ void LZW::compress(const std::string& input, const std::string& output) {
         s += i;
         dict[s] = (uint16_t)i;
     }   
+
+    Encrypt e(password);
     char chr;
     while(fin >> chr) {
         pfx += chr;
         if(dict.count(pfx)) continue;
         else {
             pfx.pop_back();
-            fout << dict[pfx];
+            fout << e.encrypt(dict[pfx]);
             if(val < (1 << 16) - 1) {
                 dict[pfx + chr] = val;
                 val++;
@@ -50,12 +53,12 @@ void LZW::compress(const std::string& input, const std::string& output) {
         }
     }
     if(!pfx.empty()) {
-        fout << dict[pfx];
+        fout << e.encrypt(dict[pfx]);
     }
 
 }
 
-void LZW::decompress(const std::string& input, const std::string& output, size_t alreadyread) {
+void LZW::decompress(const std::string& input, const std::string& output, size_t alreadyread, const int password) {
     BinaryReader fin(input, alreadyread);
     BinaryWriter fout(output);
 
@@ -66,10 +69,12 @@ void LZW::decompress(const std::string& input, const std::string& output, size_t
         dict.push_back(i1);
     }
 
+    Encrypt e(password);
     uint16_t ceva_cod;
     std::string antechr;
     uint16_t ante_cod;
     fin >> ante_cod;
+    ante_cod = e.encrypt(ante_cod);
     antechr += dict[ante_cod];
     
     for (char c : antechr) {
@@ -78,6 +83,7 @@ void LZW::decompress(const std::string& input, const std::string& output, size_t
 
     std::string actualul;
     while(fin >> ceva_cod) {
+        ceva_cod = e.encrypt(ceva_cod);
         if(ceva_cod < dict.size()) {actualul = dict[ceva_cod];}
         else {
             if(ceva_cod == dict.size()) {actualul = antechr + antechr[0]; }

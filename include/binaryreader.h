@@ -28,7 +28,6 @@ class BinaryReader{
         explicit operator bool() const {
             return fin.good();
         }
-
         size_t tellg() { return fin.tellg();}
 
 
