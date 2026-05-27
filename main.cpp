@@ -18,7 +18,7 @@ int main() {
             break;
         }
         if (optiune == 5) {
-            std::cout << ArchiveManager::getbytese() << '\n';
+            std::cout << "Am economisit atatia bytes " << ArchiveManager::getbytese() << '\n';
             std::cout << "Iesire din program.\n";
             break;
         }
@@ -50,7 +50,8 @@ int main() {
                 std::cout << "\nDecompresie finalizata!\n";
             } 
             else {
-                std::cout << "Optiune invalida!.\n";
+                std::cout << "Optiune invalida.\n";
+                break;
             }
         } 
         catch (const ArchiveException& e) {

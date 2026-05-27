@@ -17,6 +17,14 @@ const int MOD = 1e9 + 7;
 const int B = 256;
 size_t ArchiveManager::byteseconomisiti = 0;
 
+int irev_function(const std::string &password) {
+    int value = 0;
+    for(int i = 0; i < (int)password.size(); i++) {
+        value = ((1LL * value * B) % MOD + password[i]) % MOD;
+    }
+    return value;
+}
+
 void ArchiveManager::compress(const std::string& input, const std::string& password) {
     Info<std::string>::actions("COMPRESIA A INCEPUT", input);
     std::string input1 = input;
@@ -26,17 +34,11 @@ void ArchiveManager::compress(const std::string& input, const std::string& passw
         de aplicat compresia respectiva
     */
 
-    int value = 0;
-    for(int i = 0; i < (int)password.size(); i++) {
-        value = ((1LL * value * B) % MOD + password[i]) % MOD;
-    }
+    int value = irev_function(password);
 
     
     std::string v1 = std::to_string(value);
-    int value2 = 0;
-    for(int i = 0; i < (int)v1.size(); i++) {
-        value2 = ((1LL * value2 * B) % MOD + v1[i]) % MOD;
-    }
+    int value2 = irev_function(v1);
     
 
     std::transform(input1.begin(), input1.end(), input1.begin(), [](unsigned char c) {
@@ -103,17 +105,11 @@ void ArchiveManager::decompress(const std::string& input, const std::string& pas
     size_t alreadyread = fin.tellg();
 
 
-    int value = 0;
-    for(int i = 0; i < (int)password.size(); i++) {
-        value = ((1LL * value * B) % MOD + password[i]) % MOD;
-    }
+    int value = irev_function(password);
 
     
     std::string v1 = std::to_string(value);
-    int value2 = 0;
-    for(int i = 0; i < (int)v1.size(); i++) {
-        value2 = ((1LL * value2 * B) % MOD + v1[i]) % MOD;
-    }
+    int value2 = irev_function(v1);
     if (value2 != AH.get_password()) {
         throw WrongPasswordE(); 
     }
