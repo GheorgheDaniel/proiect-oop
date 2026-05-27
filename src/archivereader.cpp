@@ -1,13 +1,19 @@
 #include "archiveheader.h"
+#include "binaryreader.h"
+#include "binarywriter.h"
+#include <fstream>
+#include <bit>
+#include <array>
+#include <vector>
 
-inline void archive_header::set_data(const std::string& ext, uint8_t at, int given_pass) {
+void archive_header::set_data(const std::string& ext, uint8_t at, int given_pass) {
     algo_type = at;
     sz_ext = ext.size();
     extension = ext;
     pass = given_pass;
 }
 
-inline BinaryReader &operator>>(BinaryReader &in, archive_header &c)
+BinaryReader &operator>>(BinaryReader &in, archive_header &c)
 {
     in >> c.algo_type;
     in >> c.sz_ext;
@@ -19,7 +25,7 @@ inline BinaryReader &operator>>(BinaryReader &in, archive_header &c)
     return in;
 }
 
-inline BinaryWriter &operator<<(BinaryWriter &out, const archive_header &c)
+BinaryWriter &operator<<(BinaryWriter &out, const archive_header &c)
 {
     out << c.algo_type; 
     out << c.sz_ext;
